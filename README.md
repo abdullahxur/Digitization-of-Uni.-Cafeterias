@@ -5,7 +5,7 @@
 A digital ordering and advance booking system for university cafes to eliminate long queues and improve meal planning for students.
 
 ## The Team
-* **Abdullah Ali**
+* **Abdullah**
 * **Asad Ameen**
 * **Mahnoor Nadeem**
 * **Abdul Manan**
