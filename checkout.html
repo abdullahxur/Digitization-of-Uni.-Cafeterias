@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        .payment-method {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-option {
+            position: relative;
+        }
+        
+        .payment-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .payment-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--white);
+        }
+        
+        .payment-option input[type="radio"]:checked + .payment-label {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        
+        .payment-icon {
+            font-size: 2.5rem;
+        }
+        
+        .payment-name {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🍽️</div>
+                    <span>Campus Cafe</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🍔</span>
+                                <span>Menu</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="cart.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🛒</span>
+                                <span>Cart</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="orders.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">📦</span>
+                                <span>My Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">JD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">John Doe</div>
+                        <div class="sidebar-user-role">Student</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-content">
+                    <h1 class="main-header-title">Checkout</h1>
+                    <a href="cart.html" class="btn btn-secondary btn-sm">← Back to Cart</a>
+                </div>
+            </header>
+            
+            <div class="main-body">
+                <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem;">
+                    <!-- Checkout Form -->
+                    <div>
+                        <div class="card" style="margin-bottom: 1.5rem;">
+                            <h3 class="card-title" style="margin-bottom: 1.5rem;">Delivery Information</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input" placeholder="John Doe" value="John Doe">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-input" placeholder="+92 300 1234567">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Delivery Address</label>
+                                <textarea class="form-textarea" placeholder="Enter your delivery address">Room 204, Hostel Block A, University Campus</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Special Instructions (Optional)</label>
+                                <textarea class="form-textarea" placeholder="Any special requests for your order?" style="min-height: 80px;"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3 class="card-title" style="margin-bottom: 1.5rem;">Payment Method</h3>
+                            
+                            <div class="payment-method">
+                                <div class="payment-option">
+                                    <input type="radio" name="payment" id="card" value="card" checked>
+                                    <label for="card" class="payment-label">
+                                        <span class="payment-icon">💳</span>
+                                        <span class="payment-name">Credit/Debit Card</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="payment-option">
+                                    <input type="radio" name="payment" id="cash" value="cash">
+                                    <label for="cash" class="payment-label">
+                                        <span class="payment-icon">💵</span>
+                                        <span class="payment-name">Cash on Delivery</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="payment-option">
+                                    <input type="radio" name="payment" id="wallet" value="wallet">
+                                    <label for="wallet" class="payment-label">
+                                        <span class="payment-icon">📱</span>
+                                        <span class="payment-name">Digital Wallet</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div id="cardDetails" style="margin-top: 1.5rem;">
+                                <div class="form-group">
+                                    <label class="form-label">Card Number</label>
+                                    <input type="text" class="form-input" placeholder="1234 5678 9012 3456">
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label class="form-label">Expiry Date</label>
+                                        <input type="text" class="form-input" placeholder="MM/YY">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">CVV</label>
+                                        <input type="text" class="form-input" placeholder="123">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Summary -->
+                    <div>
+                        <div class="card" style="position: sticky; top: 2rem;">
+                            <h3 class="card-title" style="margin-bottom: 1.5rem;">Order Summary</h3>
+                            
+                            <div id="orderItems" style="margin-bottom: 1.5rem;">
+                                <!-- Order items will be loaded here -->
+                            </div>
+                            
+                            <div id="orderSummary">
+                                <!-- Summary will be loaded here -->
+                            </div>
+                            
+                            <button class="btn btn-primary" style="width: 100%;" onclick="placeOrder()">
+                                Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        function renderCheckout() {
+            if (cart.length === 0) {
+                // Show empty cart message instead of redirecting
+                document.querySelector('.main-body').innerHTML = `
+                    <div style="text-align: center; padding: 4rem 2rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
+                        <h3 style="color: var(--gray-900); margin-bottom: 0.5rem;">Your cart is empty</h3>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Add some items to your cart before checking out</p>
+                        <a href="student-dashboard.html" class="btn btn-primary">Browse Menu</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Render order items
+            document.getElementById('orderItems').innerHTML = cart.map(item => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-100);">
+                    <div>
+                        <div style="font-weight: 600; color: var(--gray-900);">${item.name}</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Qty: ${item.quantity}</div>
+                    </div>
+                    <div style="font-weight: 600; color: var(--gray-900);">Rs. ${(item.price * item.quantity).toFixed(2)}</div>
+                </div>
+            `).join('');
+            
+            // Calculate totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.05;
+            const delivery = 50;
+            const total = subtotal + tax + delivery;
+            
+            document.getElementById('orderSummary').innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div class="flex justify-between" style="margin-bottom: 0.75rem;">
+                        <span style="color: var(--gray-600);">Subtotal</span>
+                        <span style="font-weight: 600;">Rs. ${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between" style="margin-bottom: 0.75rem;">
+                        <span style="color: var(--gray-600);">Tax (5%)</span>
+                        <span style="font-weight: 600;">Rs. ${tax.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between" style="margin-bottom: 0.75rem;">
+                        <span style="color: var(--gray-600);">Delivery Fee</span>
+                        <span style="font-weight: 600;">Rs. ${delivery.toFixed(2)}</span>
+                    </div>
+                </div>
+                <div style="padding-top: 1.5rem; border-top: 2px solid var(--gray-200); margin-bottom: 1.5rem;">
+                    <div class="flex justify-between" style="font-size: 1.25rem; font-weight: 700;">
+                        <span>Total</span>
+                        <span style="color: var(--primary);">Rs. ${total.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function placeOrder() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.05;
+            const delivery = 50;
+            const total = subtotal + tax + delivery;
+            
+            const order = {
+                id: 'ORD' + Date.now(),
+                items: cart,
+                subtotal: subtotal,
+                tax: tax,
+                delivery: delivery,
+                total: total,
+                status: 'pending',
+                timestamp: new Date().toISOString()
+            };
+            
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            localStorage.setItem('cart', JSON.stringify([]));
+            
+            alert('Order placed successfully! Order ID: ' + order.id);
+            window.location.href = 'orders.html';
+        }
+        
+        // Toggle card details based on payment method
+        document.querySelectorAll('input[name="payment"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('cardDetails').style.display = 
+                    this.value === 'card' ? 'block' : 'none';
+            });
+        });
+        
+        renderCheckout();
+    </script>
+</body>
+</html>

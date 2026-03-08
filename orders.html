@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        .order-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .order-id {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .order-date {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+        
+        .order-items-list {
+            margin-bottom: 1.5rem;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 2px solid var(--gray-200);
+        }
+        
+        .order-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--gray-200);
+            z-index: 0;
+        }
+        
+        .progress-step:first-child::before {
+            left: 50%;
+            width: 50%;
+        }
+        
+        .progress-step:last-child::before {
+            width: 50%;
+        }
+        
+        .progress-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-500);
+        }
+        
+        .progress-step.active .progress-icon {
+            background: var(--primary);
+            color: var(--white);
+        }
+        
+        .progress-step.completed .progress-icon {
+            background: var(--secondary);
+            color: var(--white);
+        }
+        
+        .progress-step.completed::before {
+            background: var(--secondary);
+        }
+        
+        .progress-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🍽️</div>
+                    <span>Campus Cafe</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🍔</span>
+                                <span>Menu</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="cart.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🛒</span>
+                                <span>Cart</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="orders.html" class="sidebar-menu-link active">
+                                <span class="sidebar-menu-icon">📦</span>
+                                <span>My Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">JD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">John Doe</div>
+                        <div class="sidebar-user-role">Student</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-content">
+                    <h1 class="main-header-title">My Orders</h1>
+                    <a href="login.html" class="btn btn-secondary btn-sm">Logout</a>
+                </div>
+            </header>
+            
+            <div class="main-body">
+                <div id="ordersContainer">
+                    <!-- Orders will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        const orders = JSON.parse(localStorage.getItem('orders')) || [];
+        
+        function getStepClass(currentStatus, stepStatus) {
+            const statusOrder = ['pending', 'preparing', 'ready', 'served'];
+            const currentIndex = statusOrder.indexOf(currentStatus);
+            const stepIndex = statusOrder.indexOf(stepStatus);
+            
+            if (stepIndex < currentIndex) return 'completed';
+            if (stepIndex === currentIndex) return 'active';
+            return '';
+        }
+        
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="card" style="text-align: center; padding: 4rem 2rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">📦</div>
+                        <h3 style="color: var(--gray-900); margin-bottom: 0.5rem;">No orders yet</h3>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Start ordering delicious food from our menu</p>
+                        <a href="student-dashboard.html" class="btn btn-primary">Browse Menu</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            orders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            container.innerHTML = orders.map(order => {
+                const date = new Date(order.timestamp);
+                const statusColors = {
+                    pending: 'warning',
+                    preparing: 'primary',
+                    ready: 'success',
+                    served: 'gray'
+                };
+                
+                return `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">Order #${order.id}</div>
+                                <div class="order-date">${date.toLocaleString()}</div>
+                            </div>
+                            <span class="badge badge-${statusColors[order.status]}">${order.status}</span>
+                        </div>
+                        
+                        <div class="progress-tracker">
+                            <div class="progress-step ${getStepClass(order.status, 'pending')}">
+                                <div class="progress-icon">1</div>
+                                <div class="progress-label">Pending</div>
+                            </div>
+                            <div class="progress-step ${getStepClass(order.status, 'preparing')}">
+                                <div class="progress-icon">2</div>
+                                <div class="progress-label">Preparing</div>
+                            </div>
+                            <div class="progress-step ${getStepClass(order.status, 'ready')}">
+                                <div class="progress-icon">3</div>
+                                <div class="progress-label">Ready</div>
+                            </div>
+                            <div class="progress-step ${getStepClass(order.status, 'served')}">
+                                <div class="progress-icon">4</div>
+                                <div class="progress-label">Served</div>
+                            </div>
+                        </div>
+                        
+                        <div class="order-items-list">
+                            ${order.items.map(item => `
+                                <div class="order-item">
+                                    <span>${item.name} × ${item.quantity}</span>
+                                    <span style="font-weight: 600;">Rs. ${(item.price * item.quantity).toFixed(2)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="order-footer">
+                            <div class="order-total">Total: Rs. ${order.total.toFixed(2)}</div>
+                            ${order.status !== 'served' ? 
+                                '<button class="btn btn-primary btn-sm">Track Order</button>' : 
+                                '<button class="btn btn-secondary btn-sm">Reorder</button>'
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        renderOrders();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(renderOrders, 30000);
+    </script>
+</body>
+</html>

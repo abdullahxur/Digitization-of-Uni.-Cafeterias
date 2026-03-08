@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        .cart-table-container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .cart-item-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 120px 150px 100px 50px;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        .cart-item-row:last-child {
+            border-bottom: none;
+        }
+        
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            background: var(--gray-100);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+        
+        .cart-item-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+        
+        .cart-item-info p {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--gray-50);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            width: fit-content;
+        }
+        
+        .qty-btn-lg {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray-700);
+            transition: all 0.2s ease;
+        }
+        
+        .qty-btn-lg:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+        
+        .qty-display {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            min-width: 32px;
+            text-align: center;
+        }
+        
+        .item-price {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .item-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .remove-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .order-summary-card {
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .promo-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .promo-input-group input {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🍽️</div>
+                    <span>Campus Cafe</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🍔</span>
+                                <span>Menu</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="cart.html" class="sidebar-menu-link active">
+                                <span class="sidebar-menu-icon">🛒</span>
+                                <span>Cart</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="orders.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">📦</span>
+                                <span>My Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">JD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">John Doe</div>
+                        <div class="sidebar-user-role">Student</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-content">
+                    <h1 class="main-header-title">Shopping Cart</h1>
+                    <a href="login.html" class="btn btn-secondary btn-sm">Logout</a>
+                </div>
+            </header>
+            
+            <div class="main-body">
+                <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem;">
+                    <!-- Cart Items -->
+                    <div>
+                        <div class="cart-table-container" id="cartItems">
+                            <!-- Cart items will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Order Summary -->
+                    <div>
+                        <div class="card order-summary-card">
+                            <h3 class="card-title" style="margin-bottom: 1.5rem;">Order Summary</h3>
+                            
+                            <div class="promo-input-group">
+                                <input type="text" class="form-input" placeholder="Promo code" id="promoInput">
+                                <button class="btn btn-secondary" onclick="applyPromo()">Apply</button>
+                            </div>
+                            
+                            <div id="summaryContent">
+                                <!-- Summary will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let discount = 0;
+        
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 4rem 2rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
+                        <h3 style="color: var(--gray-900); margin-bottom: 0.5rem;">Your cart is empty</h3>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Add some delicious items from our menu</p>
+                        <a href="student-dashboard.html" class="btn btn-primary">Browse Menu</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item-row">
+                    <div class="cart-item-img">${item.emoji}</div>
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <p>${item.description}</p>
+                    </div>
+                    <div class="item-price">Rs. ${item.price}</div>
+                    <div class="qty-controls">
+                        <button class="qty-btn-lg" onclick="updateQuantity(${index}, -1)">-</button>
+                        <span class="qty-display">${item.quantity}</span>
+                        <button class="qty-btn-lg" onclick="updateQuantity(${index}, 1)">+</button>
+                    </div>
+                    <div class="item-total">Rs. ${(item.price * item.quantity).toFixed(2)}</div>
+                    <button class="remove-btn" onclick="removeItem(${index})">×</button>
+                </div>
+            `).join('');
+            
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.05;
+            const delivery = 50;
+            const discountAmount = subtotal * (discount / 100);
+            const total = subtotal + tax + delivery - discountAmount;
+            
+            document.getElementById('summaryContent').innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div class="flex justify-between" style="margin-bottom: 0.75rem;">
+                        <span style="color: var(--gray-600);">Subtotal</span>
+                        <span style="font-weight: 600;">Rs. ${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between" style="margin-bottom: 0.75rem;">
+                        <span style="color: var(--gray-600);">Tax (5%)</span>
+                        <span style="font-weight: 600;">Rs. ${tax.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between" style="margin-bottom: 0.75rem;">
+                        <span style="color: var(--gray-600);">Delivery Fee</span>
+                        <span style="font-weight: 600;">Rs. ${delivery.toFixed(2)}</span>
+                    </div>
+                    ${discount > 0 ? `
+                        <div class="flex justify-between" style="margin-bottom: 0.75rem; color: var(--secondary);">
+                            <span>Discount (${discount}%)</span>
+                            <span style="font-weight: 600;">- Rs. ${discountAmount.toFixed(2)}</span>
+                        </div>
+                    ` : ''}
+                </div>
+                <div style="padding-top: 1.5rem; border-top: 2px solid var(--gray-200); margin-bottom: 1.5rem;">
+                    <div class="flex justify-between" style="font-size: 1.25rem; font-weight: 700;">
+                        <span>Total</span>
+                        <span style="color: var(--primary);">Rs. ${total.toFixed(2)}</span>
+                    </div>
+                </div>
+                <a href="order-type.html" class="btn btn-primary" style="width: 100%;">
+                    Proceed to Checkout
+                </a>
+                <a href="student-dashboard.html" class="btn btn-secondary" style="width: 100%; margin-top: 0.75rem;">
+                    Continue Shopping
+                </a>
+            `;
+        }
+        
+        function updateQuantity(index, change) {
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+        
+        function removeItem(index) {
+            if (confirm('Remove this item from cart?')) {
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+            }
+        }
+        
+        function applyPromo() {
+            const code = document.getElementById('promoInput').value.toUpperCase();
+            if (code === 'STUDENT10') {
+                discount = 10;
+                alert('Promo code applied! 10% discount');
+            } else if (code === 'WELCOME20') {
+                discount = 20;
+                alert('Promo code applied! 20% discount');
+            } else {
+                alert('Invalid promo code');
+                discount = 0;
+            }
+            updateSummary();
+        }
+        
+        renderCart();
+    </script>
+</body>
+</html>
