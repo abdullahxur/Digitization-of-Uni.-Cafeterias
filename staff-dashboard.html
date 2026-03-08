@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🍽️</div>
+                    <span>Campus Cafe</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-section-title">Staff</h3>
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link active" onclick="showSection('orders'); return false;">
+                                <span class="sidebar-menu-icon">📋</span>
+                                <span>Order Management</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link" onclick="showSection('analytics'); return false;">
+                                <span class="sidebar-menu-icon">📊</span>
+                                <span>Analytics</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">SM</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">Staff Member</div>
+                        <div class="sidebar-user-role">Kitchen Staff</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-content">
+                    <h1 class="main-header-title" id="pageTitle">Order Management</h1>
+                    <div class="flex items-center gap-4">
+                        <span class="badge badge-danger" id="pendingBadge">0 Pending</span>
+                        <a href="login.html" class="btn btn-secondary btn-sm">Logout</a>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="main-body">
+                <!-- Order Management Section -->
+                <div id="ordersSection">
+                    <!-- Stats Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Orders Today</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);" id="ordersToday">0</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Placed</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--warning);" id="placedCount">0</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Pending</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--primary);" id="pendingCount">0</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Served</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--secondary);" id="servedCount">0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Orders Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Orders</h3>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Type</th>
+                                        <th>Table/Address</th>
+                                        <th>Items</th>
+                                        <th>Total</th>
+                                        <th>Time</th>
+                                        <th>Order Status</th>
+                                        <th>Payment</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTable">
+                                    <tr>
+                                        <td colspan="9" style="text-align: center; padding: 3rem; color: var(--gray-500);">
+                                            No orders yet
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div id="analyticsSection" style="display: none;">
+                    <!-- Analytics Stats -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Total Orders</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);" id="totalOrders">0</div>
+                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 0.5rem;">📦 All time</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Total Revenue</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);">Rs. <span id="totalRevenue">0</span></div>
+                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 0.5rem;">💰 All time</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Avg Order Value</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);">Rs. <span id="avgOrder">0</span></div>
+                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 0.5rem;">📊 Average</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Completion Rate</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);"><span id="completionRate">0</span>%</div>
+                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 0.5rem;">✅ Served orders</div>
+                        </div>
+                    </div>
+
+                    <!-- Order Type Breakdown -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="card">
+                            <h3 class="card-title" style="margin-bottom: 1.5rem;">Order Type Breakdown</h3>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--gray-700);">Dine-in Orders</span>
+                                        <strong id="dineInCount">0</strong>
+                                    </div>
+                                    <div style="background: var(--gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div id="dineInBar" style="background: var(--primary); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--gray-700);">Delivery Orders</span>
+                                        <strong id="deliveryCount">0</strong>
+                                    </div>
+                                    <div style="background: var(--gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div id="deliveryBar" style="background: var(--secondary); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title" style="margin-bottom: 1.5rem;">Payment Status</h3>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--gray-700);">Paid Orders</span>
+                                        <strong id="paidCount">0</strong>
+                                    </div>
+                                    <div style="background: var(--gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div id="paidBar" style="background: var(--secondary); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--gray-700);">Unpaid Orders</span>
+                                        <strong id="unpaidCount">0</strong>
+                                    </div>
+                                    <div style="background: var(--gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div id="unpaidBar" style="background: var(--danger); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Order History</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Type</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Payment</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersTable">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray-500);">
+                                            No orders yet
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        // Section Navigation
+        function showSection(section) {
+            document.getElementById('ordersSection').style.display = 'none';
+            document.getElementById('analyticsSection').style.display = 'none';
+            
+            document.querySelectorAll('.sidebar-menu-link').forEach(link => link.classList.remove('active'));
+            
+            if (section === 'orders') {
+                document.getElementById('ordersSection').style.display = 'block';
+                document.getElementById('pageTitle').textContent = 'Order Management';
+                document.querySelector('[onclick*="orders"]').classList.add('active');
+                loadOrders();
+            } else if (section === 'analytics') {
+                document.getElementById('analyticsSection').style.display = 'block';
+                document.getElementById('pageTitle').textContent = 'Analytics';
+                document.querySelector('[onclick*="analytics"]').classList.add('active');
+                loadAnalytics();
+            }
+        }
+        
+        function loadOrders() {
+            const orders = Storage.getOrders();
+            const today = new Date().toDateString();
+            
+            const todayOrders = orders.filter(o => new Date(o.timestamp).toDateString() === today);
+            const placed = orders.filter(o => o.status === 'placed');
+            const pending = orders.filter(o => o.status === 'pending');
+            const served = orders.filter(o => o.status === 'served');
+            
+            document.getElementById('ordersToday').textContent = todayOrders.length;
+            document.getElementById('placedCount').textContent = placed.length;
+            document.getElementById('pendingCount').textContent = pending.length;
+            document.getElementById('servedCount').textContent = served.length;
+            document.getElementById('pendingBadge').textContent = pending.length + ' Pending';
+            
+            renderOrdersTable(orders);
+        }
+        
+        function renderOrdersTable(orders) {
+            const tbody = document.getElementById('ordersTable');
+            
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 3rem; color: var(--gray-500);">No orders yet</td></tr>';
+                return;
+            }
+            
+            // Sort by most recent first
+            const sortedOrders = orders.slice().reverse();
+            
+            tbody.innerHTML = sortedOrders.map(order => {
+                const date = new Date(order.timestamp);
+                const timeAgo = Math.floor((Date.now() - date.getTime()) / 60000);
+                
+                const statusBadges = {
+                    placed: 'warning',
+                    pending: 'primary',
+                    served: 'success'
+                };
+                
+                const paymentBadges = {
+                    paid: 'success',
+                    unpaid: 'danger'
+                };
+                
+                const location = order.orderType === 'dine-in' ? 'Table ' + order.tableNumber : 'Delivery';
+                
+                return '<tr>' +
+                    '<td><strong>#' + order.id + '</strong></td>' +
+                    '<td><span class="badge badge-' + (order.orderType === 'dine-in' ? 'primary' : 'secondary') + '">' + order.orderType + '</span></td>' +
+                    '<td>' + location + '</td>' +
+                    '<td>' + order.items.length + ' items</td>' +
+                    '<td><strong>Rs. ' + order.total.toFixed(2) + '</strong></td>' +
+                    '<td>' + (timeAgo < 60 ? timeAgo + ' min ago' : date.toLocaleString()) + '</td>' +
+                    '<td>' +
+                        '<select class="form-select" style="width: auto; padding: 0.25rem 0.5rem;" onchange="updateOrderStatus(\'' + order.id + '\', this.value)">' +
+                            '<option value="placed" ' + (order.status === 'placed' ? 'selected' : '') + '>Placed</option>' +
+                            '<option value="pending" ' + (order.status === 'pending' ? 'selected' : '') + '>Pending</option>' +
+                            '<option value="served" ' + (order.status === 'served' ? 'selected' : '') + '>Served</option>' +
+                        '</select>' +
+                    '</td>' +
+                    '<td>' +
+                        '<select class="form-select" style="width: auto; padding: 0.25rem 0.5rem;" onchange="updatePaymentStatus(\'' + order.id + '\', this.value)">' +
+                            '<option value="unpaid" ' + (order.paymentStatus === 'unpaid' ? 'selected' : '') + '>Unpaid</option>' +
+                            '<option value="paid" ' + (order.paymentStatus === 'paid' ? 'selected' : '') + '>Paid</option>' +
+                        '</select>' +
+                    '</td>' +
+                    '<td>' +
+                        '<button class="btn btn-secondary btn-sm" onclick="viewOrderDetails(\'' + order.id + '\')">View</button>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+        }
+        
+        function updateOrderStatus(orderId, newStatus) {
+            Storage.updateOrderStatus(orderId, newStatus);
+            loadOrders();
+        }
+        
+        function updatePaymentStatus(orderId, newStatus) {
+            Storage.updateOrderPaymentStatus(orderId, newStatus);
+            loadOrders();
+        }
+        
+        function viewOrderDetails(orderId) {
+            const orders = Storage.getOrders();
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                const itemsList = order.items.map(item => '- ' + item.name + ' (Rs. ' + item.price + ')').join('\\n');
+                alert('Order Details:\\n\\nOrder ID: ' + order.id + '\\nType: ' + order.orderType + '\\nTotal: Rs. ' + order.total.toFixed(2) + '\\n\\nItems:\\n' + itemsList);
+            }
+        }
+        
+        function loadAnalytics() {
+            const orders = Storage.getOrders();
+            
+            // Total stats
+            const totalOrders = orders.length;
+            const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+            const avgOrder = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+            const servedOrders = orders.filter(o => o.status === 'served').length;
+            const completionRate = totalOrders > 0 ? Math.round((servedOrders / totalOrders) * 100) : 0;
+            
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2);
+            document.getElementById('avgOrder').textContent = avgOrder.toFixed(2);
+            document.getElementById('completionRate').textContent = completionRate;
+            
+            // Order type breakdown
+            const dineInOrders = orders.filter(o => o.orderType === 'dine-in').length;
+            const deliveryOrders = orders.filter(o => o.orderType === 'delivery').length;
+            const dineInPercent = totalOrders > 0 ? (dineInOrders / totalOrders) * 100 : 0;
+            const deliveryPercent = totalOrders > 0 ? (deliveryOrders / totalOrders) * 100 : 0;
+            
+            document.getElementById('dineInCount').textContent = dineInOrders;
+            document.getElementById('deliveryCount').textContent = deliveryOrders;
+            document.getElementById('dineInBar').style.width = dineInPercent + '%';
+            document.getElementById('deliveryBar').style.width = deliveryPercent + '%';
+            
+            // Payment status
+            const paidOrders = orders.filter(o => o.paymentStatus === 'paid').length;
+            const unpaidOrders = orders.filter(o => o.paymentStatus === 'unpaid').length;
+            const paidPercent = totalOrders > 0 ? (paidOrders / totalOrders) * 100 : 0;
+            const unpaidPercent = totalOrders > 0 ? (unpaidOrders / totalOrders) * 100 : 0;
+            
+            document.getElementById('paidCount').textContent = paidOrders;
+            document.getElementById('unpaidCount').textContent = unpaidOrders;
+            document.getElementById('paidBar').style.width = paidPercent + '%';
+            document.getElementById('unpaidBar').style.width = unpaidPercent + '%';
+            
+            // Recent orders table
+            const recentOrders = orders.slice(-10).reverse();
+            const tbody = document.getElementById('recentOrdersTable');
+            
+            if (recentOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray-500);">No orders yet</td></tr>';
+            } else {
+                tbody.innerHTML = recentOrders.map(order => {
+                    const statusBadges = {
+                        placed: 'warning',
+                        pending: 'primary',
+                        served: 'success'
+                    };
+                    
+                    const paymentBadges = {
+                        paid: 'success',
+                        unpaid: 'danger'
+                    };
+                    
+                    return '<tr>' +
+                        '<td><strong>#' + order.id + '</strong></td>' +
+                        '<td><span class="badge badge-' + (order.orderType === 'dine-in' ? 'primary' : 'secondary') + '">' + order.orderType + '</span></td>' +
+                        '<td><strong>Rs. ' + order.total.toFixed(2) + '</strong></td>' +
+                        '<td><span class="badge badge-' + statusBadges[order.status] + '">' + order.status + '</span></td>' +
+                        '<td><span class="badge badge-' + paymentBadges[order.paymentStatus] + '">' + order.paymentStatus + '</span></td>' +
+                        '<td>' + new Date(order.timestamp).toLocaleString() + '</td>' +
+                    '</tr>';
+                }).join('');
+            }
+        }
+        
+        // Initialize
+        loadOrders();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            const currentSection = document.getElementById('ordersSection').style.display !== 'none' ? 'orders' : 'analytics';
+            if (currentSection === 'orders') {
+                loadOrders();
+            } else {
+                loadAnalytics();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
