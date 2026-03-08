@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/student-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🍽️</div>
+                    <span>Campus Cafe</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link active">
+                                <span class="sidebar-menu-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🍔</span>
+                                <span>Menu</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="cart.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🛒</span>
+                                <span>Cart</span>
+                                <span class="badge badge-primary" id="cartBadge" style="margin-left: auto;">0</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="orders.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">📦</span>
+                                <span>My Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h6 class="sidebar-section-title">Account</h6>
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">👤</span>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">⚙️</span>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">JD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">John Doe</div>
+                        <div class="sidebar-user-role">Student</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-content">
+                    <h1 class="main-header-title">Browse Menu</h1>
+                    <div class="flex items-center gap-4">
+                        <button class="btn btn-secondary btn-sm">
+                            <span>🔔</span>
+                        </button>
+                        <a href="login.html" class="btn btn-secondary btn-sm">Logout</a>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="main-body">
+                <!-- Active Order Card -->
+                <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Active Order #ORD12345</h3>
+                            <p style="font-size: 0.875rem; color: var(--gray-600);">Your order is being prepared</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="badge badge-warning">Preparing</span>
+                            <a href="orders.html" class="btn btn-primary btn-sm">Track Order</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="search-filter-bar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="form-input search-input" placeholder="Search for food items..." id="searchInput">
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="filterMenu('all')">All Items</button>
+                        <button class="filter-tab" onclick="filterMenu('breakfast')">Breakfast</button>
+                        <button class="filter-tab" onclick="filterMenu('lunch')">Lunch</button>
+                        <button class="filter-tab" onclick="filterMenu('dinner')">Dinner</button>
+                        <button class="filter-tab" onclick="filterMenu('beverages')">Beverages</button>
+                        <button class="filter-tab" onclick="filterMenu('desserts')">Desserts</button>
+                    </div>
+                </div>
+                
+                <!-- Menu Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 360px; gap: 2rem;">
+                    <div class="menu-grid" id="menuGrid">
+                        <!-- Menu items will be loaded here -->
+                    </div>
+                    
+                    <!-- Cart Panel -->
+                    <div class="cart-panel">
+                        <div class="cart-header">
+                            <h3 class="cart-title">Your Cart</h3>
+                            <span class="cart-count" id="cartCount">0</span>
+                        </div>
+                        
+                        <div id="cartContent">
+                            <div class="empty-cart">
+                                <div class="empty-cart-icon">🛒</div>
+                                <p class="empty-cart-text">Your cart is empty</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        const menuItems = [
+            { id: 1, name: 'Chicken Biryani', description: 'Aromatic basmati rice with tender chicken pieces', price: 250, category: 'lunch', emoji: '🍛' },
+            { id: 2, name: 'Beef Nihari', description: 'Slow-cooked beef stew with traditional spices', price: 300, category: 'breakfast', emoji: '🍲' },
+            { id: 3, name: 'Halwa Puri', description: 'Traditional breakfast with semolina halwa and crispy puris', price: 150, category: 'breakfast', emoji: '🥘' },
+            { id: 4, name: 'Chicken Karahi', description: 'Spicy chicken curry cooked in a wok', price: 350, category: 'lunch', emoji: '🍗' },
+            { id: 5, name: 'Seekh Kabab', description: 'Grilled minced meat skewers with spices', price: 280, category: 'dinner', emoji: '�串' },
+            { id: 6, name: 'Mutton Korma', description: 'Rich and creamy mutton curry', price: 400, category: 'dinner', emoji: '🍖' },
+            { id: 7, name: 'Kashmiri Chai', description: 'Pink tea with cardamom and pistachios', price: 80, category: 'beverages', emoji: '☕' },
+            { id: 8, name: 'Lassi', description: 'Refreshing yogurt drink, sweet or salty', price: 100, category: 'beverages', emoji: '🥤' },
+            { id: 9, name: 'Gulab Jamun', description: 'Soft milk dumplings in sugar syrup', price: 120, category: 'desserts', emoji: '🍡' },
+            { id: 10, name: 'Kheer', description: 'Traditional rice pudding with cardamom', price: 100, category: 'desserts', emoji: '🍮' },
+            { id: 11, name: 'Chicken Tikka', description: 'Marinated chicken pieces grilled to perfection', price: 320, category: 'dinner', emoji: '🍗' },
+            { id: 12, name: 'Aloo Paratha', description: 'Stuffed potato flatbread with butter', price: 100, category: 'breakfast', emoji: '🥞' }
+        ];
+        
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let currentFilter = 'all';
+        
+        function renderMenu() {
+            const grid = document.getElementById('menuGrid');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filtered = menuItems.filter(item => {
+                const matchesCategory = currentFilter === 'all' || item.category === currentFilter;
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
+                                    item.description.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+            
+            grid.innerHTML = filtered.map(item => `
+                <div class="menu-card">
+                    <div class="menu-card-image">${item.emoji}</div>
+                    <div class="menu-card-content">
+                        <div class="menu-card-header">
+                            <h3 class="menu-card-title">${item.name}</h3>
+                            <span class="menu-card-price">Rs. ${item.price}</span>
+                        </div>
+                        <p class="menu-card-description">${item.description}</p>
+                        <div class="menu-card-footer">
+                            <span class="menu-card-category">${item.category}</span>
+                            <button class="btn btn-primary btn-sm" onclick="addToCart(${item.id})">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function filterMenu(category) {
+            currentFilter = category;
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            renderMenu();
+        }
+        
+        function addToCart(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            const existingItem = cart.find(i => i.id === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+        
+        function updateCart() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('cartBadge').textContent = count;
+            
+            const cartContent = document.getElementById('cartContent');
+            
+            if (cart.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <p class="empty-cart-text">Your cart is empty</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.05;
+            const total = subtotal + tax;
+            
+            cartContent.innerHTML = `
+                <div class="cart-items">
+                    ${cart.map((item, index) => `
+                        <div class="cart-item">
+                            <div class="cart-item-image">${item.emoji}</div>
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">Rs. ${item.price}</div>
+                                <div class="cart-item-controls">
+                                    <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                                    <span class="qty-value">${item.quantity}</span>
+                                    <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>Rs. ${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (5%)</span>
+                        <span>Rs. ${tax.toFixed(2)}</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>Rs. ${total.toFixed(2)}</span>
+                    </div>
+                    <a href="cart.html" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Proceed to Checkout
+                    </a>
+                </div>
+            `;
+        }
+        
+        function updateQuantity(index, change) {
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+        
+        document.getElementById('searchInput').addEventListener('input', renderMenu);
+        
+        renderMenu();
+        updateCart();
+    </script>
+</body>
+</html>
