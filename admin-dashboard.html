@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        /* Success Modal Styles */
+        .success-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+        }
+
+        .success-modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 3rem;
+        }
+
+        .success-modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-modal-message {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .success-modal-details {
+            background: var(--gray-100);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            font-size: 1.125rem;
+        }
+
+        .success-modal-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .success-modal-detail-label {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .success-modal-detail-value {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .success-modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .success-modal-actions .btn {
+            flex: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🍽️</div>
+                    <span>Campus Cafe</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-section-title">Admin</h3>
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link active" onclick="showSection('dashboard'); return false;">
+                                <span class="sidebar-menu-icon">📊</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link" onclick="showSection('menu'); return false;">
+                                <span class="sidebar-menu-icon">🍽️</span>
+                                <span>Menu Management</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link" onclick="showSection('orders'); return false;">
+                                <span class="sidebar-menu-icon">📋</span>
+                                <span>All Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link" onclick="showSection('users'); return false;">
+                                <span class="sidebar-menu-icon">👥</span>
+                                <span>User Management</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="#" class="sidebar-menu-link" onclick="showSection('waiters'); return false;">
+                                <span class="sidebar-menu-icon">👨‍🍳</span>
+                                <span>Waiter Assignment</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">AD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">Admin</div>
+                        <div class="sidebar-user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-content">
+                    <h1 class="main-header-title" id="pageTitle">Dashboard</h1>
+                    <a href="login.html" class="btn btn-secondary btn-sm">Logout</a>
+                </div>
+            </header>
+            
+            <div class="main-body">
+                <!-- Dashboard Section -->
+                <div id="dashboardSection">
+                    <!-- Stats Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Orders Today</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);" id="totalOrders">0</div>
+                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 0.5rem;">📦 Total orders</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Revenue Today</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);">Rs. <span id="totalRevenue">0</span></div>
+                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 0.5rem;">💰 Total earnings</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Active Users</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);">156</div>
+                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 0.5rem;">👥 Registered users</div>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Menu Items</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--gray-900);">24</div>
+                            <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 0.5rem;">🍽️ Available items</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Orders -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Orders</h3>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Student</th>
+                                        <th>Items</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersTable">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray-500);">No orders yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Menu Management Section -->
+                <div id="menuSection" style="display: none;">
+                    <div class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="card-title">Menu Items</h3>
+                            <button class="btn btn-primary" onclick="alert('Add menu item functionality')">+ Add Menu Item</button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Available</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="menuTable">
+                                    <!-- Menu items will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Orders Section -->
+                <div id="ordersSection" style="display: none;">
+                    <div class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="card-title">All Orders</h3>
+                            <button class="btn btn-secondary" onclick="exportOrders()">📥 Export CSV</button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Student</th>
+                                        <th>Items</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allOrdersTable">
+                                    <!-- Orders will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Users Section -->
+                <div id="usersSection" style="display: none;">
+                    <div class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="card-title">User Management</h3>
+                            <button class="btn btn-primary" onclick="alert('Add user functionality')">+ Add User</button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Ahmed Khan</td>
+                                        <td>ahmed@university.edu</td>
+                                        <td><span class="badge badge-primary">Student</span></td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">Edit</button>
+                                            <button class="btn btn-danger btn-sm">Deactivate</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fatima Ali</td>
+                                        <td>fatima@university.edu</td>
+                                        <td><span class="badge badge-warning">Staff</span></td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">Edit</button>
+                                            <button class="btn btn-danger btn-sm">Deactivate</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ali Hassan</td>
+                                        <td>ali@university.edu</td>
+                                        <td><span class="badge badge-primary">Student</span></td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">Edit</button>
+                                            <button class="btn btn-danger btn-sm">Deactivate</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sara Ahmed</td>
+                                        <td>sara@university.edu</td>
+                                        <td><span class="badge badge-primary">Student</span></td>
+                                        <td><span class="badge badge-gray">Inactive</span></td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm">Edit</button>
+                                            <button class="btn btn-success btn-sm">Activate</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waiter Assignment Section -->
+                <div id="waitersSection" style="display: none;">
+                    <!-- Active Tables with Orders -->
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <div class="card-header">
+                            <h3 class="card-title">Active Tables (Dine-in Orders)</h3>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Table Number</th>
+                                        <th>Order ID</th>
+                                        <th>Items</th>
+                                        <th>Total Amount</th>
+                                        <th>Assigned Waiter</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activeTablesTable">
+                                    <!-- Active tables will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- All Waiter Assignments -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">All Waiter Assignments</h3>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Waiter Name</th>
+                                        <th>Phone Number</th>
+                                        <th>Assigned Tables</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="waiterAssignmentsTable">
+                                    <!-- Waiter assignments will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Assign Waiter Modal -->
+    <div id="assignWaiterModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: var(--white); border-radius: var(--radius-xl); padding: 2.5rem; max-width: 500px; width: 90%; box-shadow: var(--shadow-xl);">
+            <h2 style="margin-bottom: 1.5rem;">Assign Waiter to Table <span id="modalTableNumber"></span></h2>
+            
+            <div class="form-group">
+                <label class="form-label">Select Waiter</label>
+                <select id="waiterSelect" class="form-select">
+                    <option value="">Choose waiter...</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeAssignModal()">Cancel</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="confirmAssignment()">Assign Waiter</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success Modal for Waiter Assignment -->
+    <div class="success-modal-overlay" id="waiterSuccessModal">
+        <div class="success-modal-content">
+            <div class="success-modal-icon">✓</div>
+            <h2 class="success-modal-title">Waiter Assigned Successfully!</h2>
+            <p class="success-modal-message">The waiter has been assigned to the table.</p>
+            <div class="success-modal-details">
+                <div class="success-modal-detail-row">
+                    <span class="success-modal-detail-label">Table Number:</span>
+                    <span class="success-modal-detail-value" id="successTableNumber">-</span>
+                </div>
+                <div class="success-modal-detail-row">
+                    <span class="success-modal-detail-label">Assigned Waiter:</span>
+                    <span class="success-modal-detail-value" id="successWaiterName">-</span>
+                </div>
+            </div>
+            <div class="success-modal-actions">
+                <button class="btn btn-primary" onclick="closeSuccessModal()">Got it!</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        function showSection(section) {
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('menuSection').style.display = 'none';
+            document.getElementById('ordersSection').style.display = 'none';
+            document.getElementById('usersSection').style.display = 'none';
+            document.getElementById('waitersSection').style.display = 'none';
+            
+            document.querySelectorAll('.sidebar-menu-link').forEach(link => link.classList.remove('active'));
+            
+            if (section === 'dashboard') {
+                document.getElementById('dashboardSection').style.display = 'block';
+                document.getElementById('pageTitle').textContent = 'Dashboard';
+                document.querySelector('[onclick*="dashboard"]').classList.add('active');
+                loadDashboard();
+            } else if (section === 'menu') {
+                document.getElementById('menuSection').style.display = 'block';
+                document.getElementById('pageTitle').textContent = 'Menu Management';
+                document.querySelector('[onclick*="menu"]').classList.add('active');
+                loadMenuItems();
+            } else if (section === 'orders') {
+                document.getElementById('ordersSection').style.display = 'block';
+                document.getElementById('pageTitle').textContent = 'All Orders';
+                document.querySelector('[onclick*="orders"]').classList.add('active');
+                loadAllOrders();
+            } else if (section === 'users') {
+                document.getElementById('usersSection').style.display = 'block';
+                document.getElementById('pageTitle').textContent = 'User Management';
+                document.querySelector('[onclick*="users"]').classList.add('active');
+            } else if (section === 'waiters') {
+                document.getElementById('waitersSection').style.display = 'block';
+                document.getElementById('pageTitle').textContent = 'Waiter Assignment';
+                document.querySelector('[onclick*="waiters"]').classList.add('active');
+                loadWaiters();
+            }
+        }
+        
+        function loadWaiters() {
+            const waiters = Storage.getWaiters();
+            const orders = Storage.getOrders();
+            const pendingTables = Storage.getPendingTables();
+            
+            // Get active dine-in orders
+            const dineInOrders = orders.filter(o => o.orderType === 'dine-in' && o.status !== 'served');
+            
+            // Combine pending tables and active orders
+            const allActiveTables = [];
+            
+            // Add pending tables (students who selected table but haven't placed order yet)
+            pendingTables.forEach(pt => {
+                allActiveTables.push({
+                    tableNumber: pt.tableNumber,
+                    orderId: 'Pending',
+                    items: 'Waiting for order',
+                    total: '-',
+                    isPending: true,
+                    timestamp: pt.timestamp
+                });
+            });
+            
+            // Add confirmed orders
+            dineInOrders.forEach(order => {
+                allActiveTables.push({
+                    tableNumber: order.tableNumber,
+                    orderId: order.id,
+                    items: `${order.items.length} items`,
+                    total: order.total,
+                    isPending: false,
+                    timestamp: order.timestamp
+                });
+            });
+            
+            // Sort by timestamp (most recent first)
+            allActiveTables.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Display active tables
+            const activeTablesTable = document.getElementById('activeTablesTable');
+            if (allActiveTables.length === 0) {
+                activeTablesTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray-500);">
+                            No active tables. Students will appear here when they select dine-in.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                activeTablesTable.innerHTML = allActiveTables.map(table => {
+                    const assignedWaiter = Storage.getWaiterForTable(table.tableNumber);
+                    return `
+                        <tr>
+                            <td><strong>Table ${table.tableNumber}</strong></td>
+                            <td>${table.isPending ? '<span class="badge badge-warning">Pending Order</span>' : `#${table.orderId}`}</td>
+                            <td>${table.items}</td>
+                            <td>${table.isPending ? '-' : `<strong>${Utils.formatCurrency(table.total)}</strong>`}</td>
+                            <td>
+                                ${assignedWaiter ? 
+                                    `<span class="badge badge-success">${assignedWaiter.name}</span>` :
+                                    `<span class="badge badge-danger">Not Assigned</span>`
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="openAssignModal(${table.tableNumber})">
+                                    ${assignedWaiter ? 'Reassign' : 'Assign'} Waiter
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            // Display all waiter assignments
+            const table = document.getElementById('waiterAssignmentsTable');
+            table.innerHTML = waiters.map(waiter => {
+                const tables = waiter.assignedTables && Array.isArray(waiter.assignedTables) ? waiter.assignedTables : [];
+                return '<tr>' +
+                    '<td><strong>' + waiter.name + '</strong></td>' +
+                    '<td>' + waiter.phone + '</td>' +
+                    '<td>' +
+                        (tables.length > 0 ? 
+                            tables.map(t => '<span class="badge badge-primary" style="margin-right: 0.25rem;">Table ' + t + '</span>').join('') :
+                            '<span class="badge badge-gray">No tables assigned</span>'
+                        ) +
+                    '</td>' +
+                    '<td>' +
+                        '<button class="btn btn-danger btn-sm" onclick="clearWaiterTables(' + waiter.id + ')">Clear All</button>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+        }
+        
+        let currentTableForAssignment = null;
+        
+        function openAssignModal(tableNumber) {
+            currentTableForAssignment = tableNumber;
+            document.getElementById('modalTableNumber').textContent = tableNumber;
+            
+            // Populate waiter dropdown
+            const waiters = Storage.getWaiters();
+            const select = document.getElementById('waiterSelect');
+            select.innerHTML = '<option value="">Choose waiter...</option>' + 
+                waiters.map(w => '<option value="' + w.id + '">' + w.name + ' - ' + w.phone + '</option>').join('');
+            
+            document.getElementById('assignWaiterModal').style.display = 'flex';
+        }
+        
+        function closeAssignModal() {
+            document.getElementById('assignWaiterModal').style.display = 'none';
+            currentTableForAssignment = null;
+        }
+        
+        function confirmAssignment() {
+            const waiterSelect = document.getElementById('waiterSelect');
+            const waiterValue = waiterSelect.value;
+            
+            if (!waiterValue || waiterValue === '') {
+                alert('Please select a waiter');
+                return;
+            }
+            
+            const waiterId = parseInt(waiterValue);
+            
+            // Get all waiters
+            const waiters = Storage.getWaiters();
+            
+            // Remove table from any existing waiter
+            for (let i = 0; i < waiters.length; i++) {
+                if (waiters[i].assignedTables && Array.isArray(waiters[i].assignedTables)) {
+                    const index = waiters[i].assignedTables.indexOf(currentTableForAssignment);
+                    if (index > -1) {
+                        waiters[i].assignedTables.splice(index, 1);
+                    }
+                }
+            }
+            
+            // Save updated waiters
+            Storage.saveWaiters(waiters);
+            
+            // Assign to new waiter
+            const assignedWaiter = Storage.assignWaiterToTable(waiterId, currentTableForAssignment);
+            
+            // Get waiter name for display
+            const waiter = waiters.find(w => w.id === waiterId);
+            const waiterName = waiter ? waiter.name : 'Unknown';
+            
+            // Show success modal instead of alert
+            document.getElementById('successTableNumber').textContent = 'Table ' + currentTableForAssignment;
+            document.getElementById('successWaiterName').textContent = waiterName;
+            
+            closeAssignModal();
+            document.getElementById('waiterSuccessModal').classList.add('active');
+        }
+        
+        function closeSuccessModal() {
+            document.getElementById('waiterSuccessModal').classList.remove('active');
+            loadWaiters(); // Refresh the waiter assignments table
+        }
+        
+        function assignWaiter() {
+            const waiterId = parseInt(document.getElementById('waiterSelect').value);
+            const tableNumber = parseInt(document.getElementById('tableInput').value);
+            
+            if (!waiterId) {
+                alert('Please select a waiter');
+                return;
+            }
+            
+            if (!tableNumber || tableNumber < 1 || tableNumber > 50) {
+                alert('Please enter a valid table number (1-50)');
+                return;
+            }
+            
+            // Check if table is already assigned
+            const waiters = Storage.getWaiters();
+            const existingWaiter = waiters.find(w => w.assignedTables.includes(tableNumber));
+            
+            if (existingWaiter) {
+                if (!confirm(`Table ${tableNumber} is already assigned to ${existingWaiter.name}. Reassign to new waiter?`)) {
+                    return;
+                }
+                // Remove from existing waiter
+                existingWaiter.assignedTables = existingWaiter.assignedTables.filter(t => t !== tableNumber);
+            }
+            
+            Storage.assignWaiterToTable(waiterId, tableNumber);
+            alert('Waiter assigned successfully!');
+            
+            // Clear inputs
+            document.getElementById('waiterSelect').value = '';
+            document.getElementById('tableInput').value = '';
+            
+            loadWaiters();
+        }
+        
+        function clearWaiterTables(waiterId) {
+            if (!confirm('Clear all table assignments for this waiter?')) {
+                return;
+            }
+            
+            const waiters = Storage.getWaiters();
+            const waiter = waiters.find(w => w.id === waiterId);
+            if (waiter) {
+                waiter.assignedTables = [];
+                Storage.saveWaiters(waiters);
+                loadWaiters();
+            }
+        }
+        
+        // Close modal on outside click
+        document.getElementById('assignWaiterModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAssignModal();
+            }
+        });
+        
+        // Close success modal on outside click
+        document.getElementById('waiterSuccessModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSuccessModal();
+            }
+        });
+        
+        function loadDashboard() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const today = new Date().toDateString();
+            const todayOrders = orders.filter(o => new Date(o.timestamp).toDateString() === today);
+            
+            document.getElementById('totalOrders').textContent = todayOrders.length;
+            document.getElementById('totalRevenue').textContent = todayOrders.reduce((sum, o) => sum + o.total, 0).toFixed(2);
+            document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'pending').length;
+            
+            const recentOrders = orders.slice(-5).reverse();
+            const table = document.getElementById('recentOrdersTable');
+            
+            if (recentOrders.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray-500);">No orders yet</td></tr>';
+            } else {
+                table.innerHTML = recentOrders.map(order => {
+                    const statusBadges = {
+                        pending: 'warning',
+                        preparing: 'primary',
+                        ready: 'success',
+                        served: 'gray'
+                    };
+                    
+                    return `
+                        <tr>
+                            <td><strong>#${order.id}</strong></td>
+                            <td>Student</td>
+                            <td>${order.items.length} items</td>
+                            <td><strong>Rs. ${order.total.toFixed(2)}</strong></td>
+                            <td><span class="badge badge-${statusBadges[order.status]}">${order.status}</span></td>
+                            <td>${new Date(order.timestamp).toLocaleString()}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+        
+        function loadMenuItems() {
+            const menuItems = [
+                { name: 'Halwa Puri', category: 'Breakfast', price: 150, available: true },
+                { name: 'Nihari', category: 'Breakfast', price: 280, available: true },
+                { name: 'Chicken Karahi', category: 'Main Course', price: 350, available: true },
+                { name: 'Chicken Biryani', category: 'Biryani', price: 300, available: true },
+                { name: 'Seekh Kabab', category: 'BBQ', price: 320, available: false },
+                { name: 'Mutton Karahi', category: 'Main Course', price: 450, available: true },
+                { name: 'Chapli Kabab', category: 'BBQ', price: 280, available: true },
+                { name: 'Paratha Roll', category: 'Fast Food', price: 180, available: true }
+            ];
+            
+            const table = document.getElementById('menuTable');
+            table.innerHTML = menuItems.map(item => `
+                <tr>
+                    <td><strong>${item.name}</strong></td>
+                    <td><span class="badge badge-gray">${item.category}</span></td>
+                    <td><strong>Rs. ${item.price}</strong></td>
+                    <td><span class="badge badge-${item.available ? 'success' : 'danger'}">${item.available ? 'Available' : 'Unavailable'}</span></td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm">Edit</button>
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function loadAllOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const table = document.getElementById('allOrdersTable');
+            
+            if (orders.length === 0) {
+                table.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray-500);">No orders yet</td></tr>';
+            } else {
+                const statusBadges = {
+                    pending: 'warning',
+                    preparing: 'primary',
+                    ready: 'success',
+                    served: 'gray'
+                };
+                
+                table.innerHTML = orders.reverse().map(order => `
+                    <tr>
+                        <td><strong>#${order.id}</strong></td>
+                        <td>Student</td>
+                        <td>${order.items.length} items</td>
+                        <td><strong>Rs. ${order.total.toFixed(2)}</strong></td>
+                        <td><span class="badge badge-${statusBadges[order.status]}">${order.status}</span></td>
+                        <td>${new Date(order.timestamp).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+        
+        function exportOrders() {
+            alert('Orders would be exported to CSV');
+        }
+        
+        loadDashboard();
+    </script>
+</body>
+</html>
