@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        .payment-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .waiter-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .waiter-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .waiter-card h2 {
+            color: var(--white);
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .waiter-phone {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            letter-spacing: 1px;
+        }
+
+        .table-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: var(--radius);
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .payment-instructions {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .instruction-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .order-summary-box {
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            color: var(--gray-700);
+        }
+
+        .summary-row.total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            padding-top: 1rem;
+            border-top: 2px solid var(--gray-300);
+            margin-top: 1rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 3rem;
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-message {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .modal-order-id {
+            background: var(--gray-100);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            font-family: monospace;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🍽️</div>
+                    <span>Campus Cafe</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-section-title">Student</h3>
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🍽️</span>
+                                <span>Menu</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="orders.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">📋</span>
+                                <span>My Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="cart.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🛒</span>
+                                <span>Cart</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">ST</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">Student</div>
+                        <div class="sidebar-user-role">Student Account</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-content">
+                    <h1 class="main-header-title">Payment</h1>
+                    <a href="login.html" class="btn btn-secondary btn-sm">Logout</a>
+                </div>
+            </header>
+            
+            <div class="main-body">
+                <div class="payment-container">
+                    <!-- Waiter Contact Card -->
+                    <div class="waiter-card">
+                        <div class="waiter-icon">👨‍🍳</div>
+                        <h2>Your Assigned Waiter</h2>
+                        <p id="waiterName" style="font-size: 1.25rem; margin-bottom: 0.5rem;">Loading...</p>
+                        <div class="waiter-phone" id="waiterPhone">+92 XXX XXXXXXX</div>
+                        <div class="table-info">
+                            <strong>Table Number:</strong> <span id="tableDisplay">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Instructions -->
+                    <div class="payment-instructions">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--gray-900);">Payment Instructions</h3>
+                        
+                        <div class="instruction-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong style="display: block; margin-bottom: 0.25rem;">Call the Waiter</strong>
+                                <p style="color: var(--gray-600);">Contact your assigned waiter using the phone number above</p>
+                            </div>
+                        </div>
+
+                        <div class="instruction-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong style="display: block; margin-bottom: 0.25rem;">Make Payment</strong>
+                                <p style="color: var(--gray-600);">Pay the total amount in cash to the waiter</p>
+                            </div>
+                        </div>
+
+                        <div class="instruction-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong style="display: block; margin-bottom: 0.25rem;">Confirm Order</strong>
+                                <p style="color: var(--gray-600);">Click the button below to place your order</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="card">
+                        <h3 class="card-title" style="margin-bottom: 1.5rem;">Order Summary</h3>
+                        <div class="order-summary-box" id="orderSummary">
+                            <!-- Summary will be loaded here -->
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.125rem;" onclick="placeOrder()">
+                            Place Order
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="window.location.href='cart.html'">
+                            Back to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">✓</div>
+            <h2 class="modal-title">Order Placed Successfully!</h2>
+            <p class="modal-message">Your order has been confirmed and sent to the kitchen.</p>
+            <div class="modal-order-id" id="modalOrderId">Order ID: ORD123456789</div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="goToOrders()">View My Orders</button>
+                <button class="btn btn-secondary" onclick="goToDashboard()">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        // Simple payment page script
+        var tableNumber = sessionStorage.getItem('tableNumber');
+        var cart = Storage.getCart();
+
+        // Validate data
+        if (!tableNumber) {
+            alert('No table number found. Redirecting to order type selection.');
+            window.location.href = 'order-type.html';
+        }
+        
+        if (!cart || cart.length === 0) {
+            alert('Your cart is empty. Redirecting to menu.');
+            window.location.href = 'student-dashboard.html';
+        }
+
+        // Display table number
+        document.getElementById('tableDisplay').textContent = tableNumber;
+
+        // Get assigned waiter - simplified
+        var waiters = Storage.getWaiters();
+        var assignedWaiter = null;
+        
+        for (var i = 0; i < waiters.length; i++) {
+            if (waiters[i].assignedTables && waiters[i].assignedTables.includes(parseInt(tableNumber))) {
+                assignedWaiter = waiters[i];
+                break;
+            }
+        }
+        
+        if (assignedWaiter) {
+            document.getElementById('waiterName').textContent = assignedWaiter.name;
+            document.getElementById('waiterPhone').textContent = assignedWaiter.phone;
+        } else {
+            document.getElementById('waiterName').textContent = 'Ahmed Khan';
+            document.getElementById('waiterPhone').textContent = '+92 300 1234567';
+        }
+
+        // Calculate and display order summary
+        var totals = Utils.calculateOrderTotals(cart, 0);
+        totals.deliveryFee = 0;
+        totals.total = totals.subtotal + totals.gst;
+
+        document.getElementById('orderSummary').innerHTML = 
+            '<div class="summary-row"><span>Subtotal</span><span>' + Utils.formatCurrency(totals.subtotal) + '</span></div>' +
+            '<div class="summary-row"><span>GST (5%)</span><span>' + Utils.formatCurrency(totals.gst) + '</span></div>' +
+            '<div class="summary-row"><span>Delivery Fee</span><span>' + Utils.formatCurrency(0) + '</span></div>' +
+            '<div class="summary-row total"><span>Total Amount</span><span>' + Utils.formatCurrency(totals.total) + '</span></div>';
+
+        function placeOrder() {
+            try {
+                // Get fresh data
+                var orderCart = Storage.getCart();
+                var orderTable = parseInt(tableNumber);
+                
+                // Calculate totals
+                var orderTotals = Utils.calculateOrderTotals(orderCart, 0);
+                var finalTotal = orderTotals.subtotal + orderTotals.gst;
+                
+                // Get waiter name
+                var waiterName = 'Ahmed Khan'; // Default
+                var allWaiters = Storage.getWaiters();
+                for (var i = 0; i < allWaiters.length; i++) {
+                    if (allWaiters[i].assignedTables && allWaiters[i].assignedTables.includes(orderTable)) {
+                        waiterName = allWaiters[i].name;
+                        break;
+                    }
+                }
+                
+                // Create order
+                var order = {
+                    id: Utils.generateOrderId(),
+                    items: orderCart,
+                    orderType: 'dine-in',
+                    tableNumber: orderTable,
+                    waiter: waiterName,
+                    subtotal: orderTotals.subtotal,
+                    gst: orderTotals.gst,
+                    deliveryFee: 0,
+                    discount: 0,
+                    total: finalTotal,
+                    status: 'placed',
+                    paymentStatus: 'unpaid',
+                    timestamp: new Date().toISOString()
+                };
+
+                // Save order
+                Storage.addOrder(order);
+                Storage.clearCart();
+                Storage.removePendingTable(orderTable);
+
+                // Show success modal instead of alert
+                document.getElementById('modalOrderId').textContent = 'Order ID: ' + order.id;
+                document.getElementById('successModal').classList.add('active');
+            } catch (error) {
+                alert('Error placing order: ' + error.message);
+            }
+        }
+
+        function goToOrders() {
+            window.location.href = 'orders.html';
+        }
+
+        function goToDashboard() {
+            window.location.href = 'student-dashboard.html';
+        }
+    </script>
+</body>
+</html>

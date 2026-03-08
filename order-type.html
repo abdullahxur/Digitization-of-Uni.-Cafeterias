@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Order Type - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <style>
+        .order-type-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .order-type-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .order-type-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .order-type-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-type-card h2 {
+            font-size: 1.75rem;
+            color: var(--gray-900);
+            margin-bottom: 0.75rem;
+        }
+
+        .order-type-card p {
+            color: var(--gray-600);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-type-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: #EEF2FF;
+            color: var(--primary);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content h2 {
+            font-size: 1.5rem;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🍽️</div>
+                    <span>Campus Cafe</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-section-title">Student</h3>
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="student-dashboard.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">🍽️</span>
+                                <span>Menu</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="orders.html" class="sidebar-menu-link">
+                                <span class="sidebar-menu-icon">📋</span>
+                                <span>My Orders</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="cart.html" class="sidebar-menu-link active">
+                                <span class="sidebar-menu-icon">🛒</span>
+                                <span>Cart</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">ST</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">Student</div>
+                        <div class="sidebar-user-role">Student Account</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-content">
+                    <h1 class="main-header-title">Select Order Type</h1>
+                    <a href="login.html" class="btn btn-secondary btn-sm">Logout</a>
+                </div>
+            </header>
+            
+            <div class="main-body">
+                <div class="order-type-container">
+                    <div class="order-type-card" onclick="selectOrderType('delivery')">
+                        <div class="order-type-icon">🚚</div>
+                        <h2>Delivery</h2>
+                        <p>Get your food delivered to your location</p>
+                        <div class="order-type-badge">Delivery Fee: Rs. 50</div>
+                    </div>
+                    
+                    <div class="order-type-card" onclick="selectOrderType('dine-in')">
+                        <div class="order-type-icon">🍽️</div>
+                        <h2>Dine In</h2>
+                        <p>Enjoy your meal at the cafeteria</p>
+                        <div class="order-type-badge">No Delivery Fee</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Dine-in Modal -->
+    <div id="dineInModal" class="modal">
+        <div class="modal-content">
+            <h2>Select Your Table</h2>
+            <p style="color: var(--gray-600); margin-bottom: 1.5rem;">Please enter your table number</p>
+            
+            <div class="form-group">
+                <label class="form-label">Table Number (1-50)</label>
+                <input type="number" id="tableNumber" class="form-input" placeholder="Enter table number" min="1" max="50">
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" style="flex: 1;" onclick="confirmDineIn()">Continue</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        function selectOrderType(type) {
+            if (type === 'delivery') {
+                sessionStorage.setItem('orderType', 'delivery');
+                window.location.href = 'checkout.html';
+            } else if (type === 'dine-in') {
+                document.getElementById('dineInModal').classList.add('active');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('dineInModal').classList.remove('active');
+        }
+
+        function confirmDineIn() {
+            const tableNumber = document.getElementById('tableNumber').value;
+            
+            if (!tableNumber) {
+                alert('Please enter a table number');
+                return;
+            }
+            
+            const num = parseInt(tableNumber);
+            if (num < 1 || num > 50) {
+                alert('Please enter a valid table number (1-50)');
+                return;
+            }
+            
+            // Add to pending tables so admin can see it
+            Storage.addPendingTable(num);
+            
+            sessionStorage.setItem('orderType', 'dine-in');
+            sessionStorage.setItem('tableNumber', tableNumber);
+            window.location.href = 'payment.html';
+        }
+
+        document.getElementById('dineInModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
