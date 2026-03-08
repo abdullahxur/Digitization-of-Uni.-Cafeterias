@@ -41,3 +41,44 @@ A digital ordering and advance booking system for university cafes to eliminate 
    - Navigate to the login page
    - Select a role (Student/Staff/Admin)
    - Enter any email and password to access the system
+
+
+### Option 2: Using a Local Server (Recommended)
+
+#### Using Python (Built-in)
+
+```bash
+# Python 3.x
+python -m http.server 8000
+
+# Python 2.x
+python -m SimpleHTTPServer 8000
+```
+
+Then open: `http://localhost:8000`
+
+#### Using Node.js (http-server)
+
+```bash
+# Install http-server globally
+npm install -g http-server
+
+# Run server
+http-server -p 8000
+```
+
+Then open: `http://localhost:8000`
+
+#### Using PHP (Built-in)
+
+```bash
+php -S localhost:8000
+```
+
+Then open: `http://localhost:8000`
+
+#### Using VS Code Live Server Extension
+
+1. Install "Live Server" extension in VS Code
+2. Right-click on `index.html`
+3. Select "Open with Live Server"
