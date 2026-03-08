@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Campus Cafe</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+            padding: 0 1.5rem;
+        }
+        
+        .login-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 3rem;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+        
+        .login-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+        
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .role-option {
+            position: relative;
+        }
+        
+        .role-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .role-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 0.5rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--white);
+        }
+        
+        .role-option input[type="radio"]:checked + .role-label {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        
+        .role-icon {
+            font-size: 1.5rem;
+        }
+        
+        .role-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .role-option input[type="radio"]:checked + .role-label .role-name {
+            color: var(--primary);
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .back-link a {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+        
+        .back-link a:hover {
+            color: var(--gray-900);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">🍽️</div>
+                <h1 class="login-title">Welcome back</h1>
+                <p class="login-subtitle">Sign in to your account to continue</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="role-selector">
+                    <div class="role-option">
+                        <input type="radio" name="role" value="student" id="roleStudent" checked>
+                        <label for="roleStudent" class="role-label">
+                            <span class="role-icon">🎓</span>
+                            <span class="role-name">Student</span>
+                        </label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" name="role" value="staff" id="roleStaff">
+                        <label for="roleStaff" class="role-label">
+                            <span class="role-icon">👨‍🍳</span>
+                            <span class="role-name">Staff</span>
+                        </label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" name="role" value="admin" id="roleAdmin">
+                        <label for="roleAdmin" class="role-label">
+                            <span class="role-icon">👤</span>
+                            <span class="role-name">Admin</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Email address</label>
+                    <input type="email" id="email" class="form-input" placeholder="you@university.edu" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                    Sign In
+                </button>
+            </form>
+            
+            <div class="back-link">
+                <a href="index.html">← Back to home</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const email = document.getElementById('email').value;
+            
+            // Store user info
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('userEmail', email);
+            
+            // Redirect based on role
+            if (role === 'student') {
+                window.location.href = 'student-dashboard.html';
+            } else if (role === 'staff') {
+                window.location.href = 'staff-dashboard.html';
+            } else if (role === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>
