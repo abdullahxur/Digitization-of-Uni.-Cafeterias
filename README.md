@@ -82,3 +82,23 @@ Then open: `http://localhost:8000`
 1. Install "Live Server" extension in VS Code
 2. Right-click on `index.html`
 3. Select "Open with Live Server"
+
+
+### Option 3: Deploy to GitHub Pages
+
+1. **Push to GitHub**
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   git push origin main
+   ```
+
+2. **Enable GitHub Pages**
+   - Go to repository Settings
+   - Navigate to Pages section
+   - Select branch: `main`
+   - Select folder: `/ (root)`
+   - Click Save
+
+3. **Access your site**
+   - Your site will be available at: `https://yourusername.github.io/campus-cafe`
